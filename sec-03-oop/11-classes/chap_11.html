@@ -892,25 +892,27 @@ Listing&nbsp;9: Constructor must have the same name as class. Filename=<code>bas
 <span id="cb15-2"><a href=""></a><span class="kw">class</span> Vector2D</span>
 <span id="cb15-3"><a href=""></a><span class="op">{</span></span>
 <span id="cb15-4"><a href=""></a><span class="kw">private</span><span class="op">:</span></span>
-<span id="cb15-5"><a href=""></a>    <span class="dt">double</span> x <span class="op">{};</span> <span class="co">// let remove {} to illustrate non-initialized members for students</span></span>
+<span id="cb15-5"><a href=""></a>    <span class="dt">double</span> x <span class="op">{</span> <span class="dv">24</span> <span class="op">};</span> <span class="co">// let remove {} to illustrate non-initialized members for students</span></span>
 <span id="cb15-6"><a href=""></a>    <span class="dt">double</span> y <span class="op">{};</span></span>
 <span id="cb15-7"><a href=""></a>    </span>
 <span id="cb15-8"><a href=""></a><span class="kw">public</span><span class="op">:</span></span>
 <span id="cb15-9"><a href=""></a>    Vector2D<span class="op">(</span><span class="dt">double</span> x<span class="op">,</span> <span class="dt">double</span> y<span class="op">)</span> </span>
 <span id="cb15-10"><a href=""></a>    <span class="op">{</span></span>
-<span id="cb15-11"><a href=""></a>        <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">"Vector2D("</span> <span class="op">&lt;&lt;</span> x <span class="op">&lt;&lt;</span> <span class="st">", "</span> <span class="op">&lt;&lt;</span> y <span class="op">&lt;&lt;</span> <span class="st">") constructed</span><span class="sc">\n</span><span class="st">"</span><span class="op">;</span> </span>
-<span id="cb15-12"><a href=""></a>    <span class="op">}</span></span>
-<span id="cb15-13"><a href=""></a>    <span class="dt">void</span> print<span class="op">()</span> <span class="at">const</span> <span class="op">{</span></span>
-<span id="cb15-14"><a href=""></a>        <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">"Vector2D("</span> <span class="op">&lt;&lt;</span> x <span class="op">&lt;&lt;</span> <span class="st">", "</span> <span class="op">&lt;&lt;</span> y <span class="op">&lt;&lt;</span> <span class="st">")</span><span class="sc">\n</span><span class="st">"</span><span class="op">;</span></span>
-<span id="cb15-15"><a href=""></a>    <span class="op">}</span></span>
-<span id="cb15-16"><a href=""></a><span class="op">};</span></span>
-<span id="cb15-17"><a href=""></a></span>
-<span id="cb15-18"><a href=""></a><span class="dt">int</span> main<span class="op">()</span></span>
-<span id="cb15-19"><a href=""></a><span class="op">{</span></span>
-<span id="cb15-20"><a href=""></a>    Vector2D v <span class="op">{</span><span class="dv">42</span><span class="op">,</span> <span class="dv">24</span><span class="op">};</span>    <span class="co">// call Vector2D(double, double)</span></span>
-<span id="cb15-21"><a href=""></a>    v<span class="op">.</span>print<span class="op">();</span></span>
-<span id="cb15-22"><a href=""></a>    <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span></span>
-<span id="cb15-23"><a href=""></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb15-11"><a href=""></a>        <span class="kw">this</span><span class="op">-&gt;</span>x <span class="op">=</span> x<span class="op">;</span></span>
+<span id="cb15-12"><a href=""></a>        <span class="kw">this</span><span class="op">-&gt;</span>y <span class="op">=</span> y<span class="op">;</span></span>
+<span id="cb15-13"><a href=""></a>        <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">"Vector2D("</span> <span class="op">&lt;&lt;</span> <span class="kw">this</span><span class="op">-&gt;</span>x <span class="op">&lt;&lt;</span> <span class="st">", "</span> <span class="op">&lt;&lt;</span> <span class="kw">this</span><span class="op">-&gt;</span>y <span class="op">&lt;&lt;</span> <span class="st">") constructed</span><span class="sc">\n</span><span class="st">"</span><span class="op">;</span></span>
+<span id="cb15-14"><a href=""></a>    <span class="op">}</span></span>
+<span id="cb15-15"><a href=""></a>    <span class="dt">void</span> print<span class="op">()</span> <span class="at">const</span> <span class="op">{</span></span>
+<span id="cb15-16"><a href=""></a>        <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">"Vector2D("</span> <span class="op">&lt;&lt;</span> x <span class="op">&lt;&lt;</span> <span class="st">", "</span> <span class="op">&lt;&lt;</span> y <span class="op">&lt;&lt;</span> <span class="st">")</span><span class="sc">\n</span><span class="st">"</span><span class="op">;</span></span>
+<span id="cb15-17"><a href=""></a>    <span class="op">}</span></span>
+<span id="cb15-18"><a href=""></a><span class="op">};</span></span>
+<span id="cb15-19"><a href=""></a></span>
+<span id="cb15-20"><a href=""></a><span class="dt">int</span> main<span class="op">()</span></span>
+<span id="cb15-21"><a href=""></a><span class="op">{</span></span>
+<span id="cb15-22"><a href=""></a>    Vector2D v <span class="op">{</span><span class="dv">42</span><span class="op">,</span> <span class="dv">24</span><span class="op">};</span>    <span class="co">// call Vector2D(double, double)</span></span>
+<span id="cb15-23"><a href=""></a>    v<span class="op">.</span>print<span class="op">();</span></span>
+<span id="cb15-24"><a href=""></a>    <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb15-25"><a href=""></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </figure>
 </div>
@@ -1175,7 +1177,7 @@ Listing&nbsp;13: Different initializers in classes. Filename=<code>different_ini
 <span id="cb23-12"><a href=""></a><span class="op">{</span></span>
 <span id="cb23-13"><a href=""></a><span class="kw">private</span><span class="op">:</span></span>
 <span id="cb23-14"><a href=""></a>    <span class="dt">int</span> x <span class="op">{};</span>       <span class="co">// default member initializer (will be ignored)</span></span>
-<span id="cb23-15"><a href=""></a>    <span class="dt">int</span> y <span class="op">{</span> <span class="dv">2</span> <span class="op">};</span>    <span class="co">// default member initializer (will be used)</span></span>
+<span id="cb23-15"><a href=""></a>    <span class="dt">int</span> y <span class="op">{</span> <span class="dv">42</span> <span class="op">};</span>    <span class="co">// default member initializer (will be used)</span></span>
 <span id="cb23-16"><a href=""></a>    <span class="dt">int</span> z<span class="op">;</span>      <span class="co">// no initializer, you see "0" in the output due to Compiler, </span></span>
 <span id="cb23-17"><a href=""></a>                <span class="co">// not real initialzation value. It may contain garbage value</span></span>
 <span id="cb23-18"><a href=""></a>                <span class="co">// on other computers/compilers.</span></span>
@@ -1195,7 +1197,7 @@ Listing&nbsp;13: Different initializers in classes. Filename=<code>different_ini
 <span id="cb23-32"><a href=""></a></span>
 <span id="cb23-33"><a href=""></a><span class="dt">int</span> main<span class="op">()</span></span>
 <span id="cb23-34"><a href=""></a><span class="op">{</span></span>
-<span id="cb23-35"><a href=""></a>    <span class="co">// do_dirty_stack();       // fill the stack with garbage first</span></span>
+<span id="cb23-35"><a href=""></a>    do_dirty_stack<span class="op">();</span>       <span class="co">// fill the stack with garbage first</span></span>
 <span id="cb23-36"><a href=""></a>    Foo foo <span class="op">{</span> <span class="dv">6</span> <span class="op">};</span></span>
 <span id="cb23-37"><a href=""></a>    foo<span class="op">.</span>print<span class="op">();</span></span>
 <span id="cb23-38"><a href=""></a></span>
@@ -1737,9 +1739,12 @@ Listing&nbsp;22: When a function returns by value, a temporary object is initial
 <span id="cb37-45"><a href=""></a>    Fraction f2 <span class="op">{</span> generate_fraction<span class="op">(</span><span class="dv">1</span><span class="op">,</span> <span class="dv">2</span><span class="op">)</span> <span class="op">};</span> <span class="co">// Fraction is returned using copy constructor</span></span>
 <span id="cb37-46"><a href=""></a></span>
 <span id="cb37-47"><a href=""></a>    print_fraction<span class="op">(</span>f2<span class="op">);</span> <span class="co">// f is copied into the function parameter using copy constructor</span></span>
-<span id="cb37-48"><a href=""></a></span>
-<span id="cb37-49"><a href=""></a>    <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span></span>
-<span id="cb37-50"><a href=""></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb37-48"><a href=""></a>    print_fraction<span class="op">(</span>f2<span class="op">);</span></span>
+<span id="cb37-49"><a href=""></a></span>
+<span id="cb37-50"><a href=""></a>    Fraction f3 <span class="op">{</span> generate_fraction<span class="op">(</span><span class="dv">4</span><span class="op">,</span> <span class="dv">2</span><span class="op">)</span> <span class="op">};</span></span>
+<span id="cb37-51"><a href=""></a>    print_fraction<span class="op">(</span>f3<span class="op">);</span></span>
+<span id="cb37-52"><a href=""></a>    <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb37-53"><a href=""></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </figure>
 </div>

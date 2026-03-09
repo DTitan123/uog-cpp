@@ -45,6 +45,9 @@ int main()
     Fraction f2 { generate_fraction(1, 2) }; // Fraction is returned using copy constructor
 
     print_fraction(f2); // f is copied into the function parameter using copy constructor
+    print_fraction(f2);
 
+    Fraction f3 { generate_fraction(4, 2) };
+    print_fraction(f3);
     return 0;
 }
