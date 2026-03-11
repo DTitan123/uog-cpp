@@ -208,6 +208,8 @@
 <li><a href="#/intro-to-inheritance" id="/toc-intro-to-inheritance">Intro to inheritance</a></li>
 <li><a href="#/basic-inheritance-in-c" id="/toc-basic-inheritance-in-c">Basic inheritance in C++</a></li>
 <li><a href="#/split-the-program-into-header-files-and-implementation-files" id="/toc-split-the-program-into-header-files-and-implementation-files">Split the program into header files and implementation files</a></li>
+<li><a href="#/order-of-construction-of-derived-classes" id="/toc-order-of-construction-of-derived-classes">Order of construction of derived classes</a></li>
+<li><a href="#/constructors-and-initialization-of-derived-classes" id="/toc-constructors-and-initialization-of-derived-classes">Constructors and initialization of derived classes</a></li>
 </ul>
 </nav>
 </section>
@@ -741,7 +743,8 @@ Listing&nbsp;6: A program using classes <code>Lecturer</code> and <code>Student<
 </section>
 <section id="inheritance-chains" class="slide level2">
 <h2>Inheritance chains</h2>
-<p>✎&nbsp; We can comeback to our bigger diagram: <code>UGStudent</code>, <code>PGTStudent</code> and <code>PGRStudent</code> are all derived from class <code>Student</code> and thus we have [<strong>inherintance chain</strong>]{style:“color:red”}</p>
+<p>✎&nbsp; We can comeback to our bigger diagram</p>
+<p><code>UGStudent</code>, <code>PGTStudent</code> and <code>PGRStudent</code> are all derived from class <code>Student</code> and thus we have <span style="color:red"><strong>inherintance chain</strong></span></p>
 <div class="cell" data-reveal="true" data-layout-align="default">
 <div class="cell-output-display">
 <div>
@@ -914,6 +917,446 @@ Listing&nbsp;10: Implementation file for class <code>Lecturer</code> Filename=<c
 </div>
 </figure>
 </div>
+</section>
+<section id="class-student-header-file" class="slide level2">
+<h2>class <code>Student</code>: Header file</h2>
+<div id="lst-header-file-student" class="listing quarto-float quarto-figure quarto-figure-left">
+<figure class="quarto-float quarto-float-lst">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-header-file-student-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Listing&nbsp;11: Header file for class <code>Student</code> Filename=<code>uni-program/student.h</code>
+</figcaption>
+<div aria-describedby="lst-header-file-student-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode numberSource cpp number-lines code-with-copy"><code class="sourceCode cpp"><span id="cb11-1"><a href=""></a><span class="pp">#ifndef STUDENT_H</span></span>
+<span id="cb11-2"><a href=""></a><span class="pp">#define STUDENT_H</span></span>
+<span id="cb11-3"><a href=""></a></span>
+<span id="cb11-4"><a href=""></a><span class="pp">#include </span><span class="im">&lt;string&gt;</span></span>
+<span id="cb11-5"><a href=""></a><span class="pp">#include </span><span class="im">&lt;string_view&gt;</span></span>
+<span id="cb11-6"><a href=""></a><span class="pp">#include </span><span class="im">"uniperson.h"</span></span>
+<span id="cb11-7"><a href=""></a></span>
+<span id="cb11-8"><a href=""></a><span class="kw">class</span> Student <span class="op">:</span> <span class="kw">public</span> UniPerson  <span class="co">// non inheritance from UniPerson</span></span>
+<span id="cb11-9"><a href=""></a><span class="op">{</span></span>
+<span id="cb11-10"><a href=""></a><span class="kw">private</span><span class="op">:</span></span>
+<span id="cb11-11"><a href=""></a>    <span class="dt">double</span> tuition<span class="op">;</span></span>
+<span id="cb11-12"><a href=""></a>    <span class="co">// We can remove a lot of code here!!!</span></span>
+<span id="cb11-13"><a href=""></a><span class="kw">public</span><span class="op">:</span></span>
+<span id="cb11-14"><a href=""></a>    Student<span class="op">(</span><span class="bu">std::</span>string_view name <span class="op">=</span> <span class="st">""</span><span class="op">,</span> <span class="dt">int</span> age <span class="op">=</span> <span class="dv">0</span><span class="op">,</span> <span class="dt">double</span> tuition <span class="op">=</span> <span class="dv">42000</span><span class="op">);</span></span>
+<span id="cb11-15"><a href=""></a>    <span class="dt">double</span> get_tuition<span class="op">()</span> <span class="at">const</span><span class="op">;</span></span>
+<span id="cb11-16"><a href=""></a><span class="op">};</span></span>
+<span id="cb11-17"><a href=""></a></span>
+<span id="cb11-18"><a href=""></a><span class="pp">#endif</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</figure>
+</div>
+</section>
+<section id="class-student-implementation-file" class="slide level2">
+<h2>class <code>Student</code>: Implementation file</h2>
+<div id="lst-implementation-file-student" class="listing quarto-float quarto-figure quarto-figure-left">
+<figure class="quarto-float quarto-float-lst">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-implementation-file-student-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Listing&nbsp;12: Implementation file for class <code>Student</code> Filename=<code>uni-program/student.cpp</code>
+</figcaption>
+<div aria-describedby="lst-implementation-file-student-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode numberSource cpp number-lines code-with-copy"><code class="sourceCode cpp"><span id="cb12-1"><a href=""></a><span class="pp">#include </span><span class="im">"student.h"</span></span>
+<span id="cb12-2"><a href=""></a></span>
+<span id="cb12-3"><a href=""></a>Student<span class="op">::</span>Student<span class="op">(</span><span class="bu">std::</span>string_view name<span class="op">,</span> <span class="dt">int</span> age<span class="op">,</span> <span class="dt">double</span> tuition<span class="op">)</span> </span>
+<span id="cb12-4"><a href=""></a>    <span class="op">:</span> UniPerson<span class="op">{</span>name<span class="op">,</span> age<span class="op">},</span> tuition<span class="op">{</span>tuition<span class="op">}</span> </span>
+<span id="cb12-5"><a href=""></a>    <span class="op">{}</span></span>
+<span id="cb12-6"><a href=""></a></span>
+<span id="cb12-7"><a href=""></a><span class="dt">double</span> Student<span class="op">::</span>get_tuition<span class="op">()</span> <span class="at">const</span> <span class="op">{</span> </span>
+<span id="cb12-8"><a href=""></a>    <span class="cf">return</span> tuition<span class="op">;</span> </span>
+<span id="cb12-9"><a href=""></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</figure>
+</div>
+</section>
+<section id="class-ugstudent-header-file" class="slide level2">
+<h2>class <code>UGStudent</code>: Header file</h2>
+<div id="lst-header-file-ugstudent" class="listing quarto-float quarto-figure quarto-figure-left">
+<figure class="quarto-float quarto-float-lst">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-header-file-ugstudent-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Listing&nbsp;13: Header file for class <code>UGStudent</code> Filename=<code>uni-program/ugstudent.h</code>
+</figcaption>
+<div aria-describedby="lst-header-file-ugstudent-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode numberSource cpp number-lines code-with-copy"><code class="sourceCode cpp"><span id="cb13-1"><a href=""></a><span class="pp">#ifndef UGSTUDENT_H</span></span>
+<span id="cb13-2"><a href=""></a><span class="pp">#define UGSTUDENT_H</span></span>
+<span id="cb13-3"><a href=""></a></span>
+<span id="cb13-4"><a href=""></a><span class="pp">#include </span><span class="im">"student.h"</span></span>
+<span id="cb13-5"><a href=""></a></span>
+<span id="cb13-6"><a href=""></a><span class="kw">class</span> UGStudent <span class="op">:</span> <span class="kw">public</span> Student <span class="op">{</span></span>
+<span id="cb13-7"><a href=""></a><span class="kw">public</span><span class="op">:</span></span>
+<span id="cb13-8"><a href=""></a>    <span class="co">// Call the base Student constructor</span></span>
+<span id="cb13-9"><a href=""></a>    UGStudent<span class="op">(</span><span class="bu">std::</span>string_view name <span class="op">=</span> <span class="st">""</span><span class="op">,</span> <span class="dt">int</span> age <span class="op">=</span> <span class="dv">0</span><span class="op">,</span> <span class="dt">double</span> tuition <span class="op">=</span> <span class="fl">0.0</span><span class="op">);</span></span>
+<span id="cb13-10"><a href=""></a>    </span>
+<span id="cb13-11"><a href=""></a>    <span class="dt">void</span> write_BSc_thesis<span class="op">()</span> <span class="at">const</span><span class="op">;</span></span>
+<span id="cb13-12"><a href=""></a><span class="op">};</span></span>
+<span id="cb13-13"><a href=""></a></span>
+<span id="cb13-14"><a href=""></a><span class="pp">#endif</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</figure>
+</div>
+</section>
+<section id="class-ugstudent-implementation-file" class="slide level2">
+<h2>class <code>UGStudent</code>: Implementation file</h2>
+<div id="lst-implementation-file-ugstudent" class="listing quarto-float quarto-figure quarto-figure-left">
+<figure class="quarto-float quarto-float-lst">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-implementation-file-ugstudent-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Listing&nbsp;14: Implementation file for class <code>UGStudent</code> Filename=<code>uni-program/ugstudent.cpp</code>
+</figcaption>
+<div aria-describedby="lst-implementation-file-ugstudent-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode numberSource cpp number-lines code-with-copy"><code class="sourceCode cpp"><span id="cb14-1"><a href=""></a><span class="pp">#include </span><span class="im">&lt;iostream&gt;</span></span>
+<span id="cb14-2"><a href=""></a><span class="pp">#include </span><span class="im">"ugstudent.h"</span></span>
+<span id="cb14-3"><a href=""></a></span>
+<span id="cb14-4"><a href=""></a><span class="co">// Remember: No default arguments here!</span></span>
+<span id="cb14-5"><a href=""></a>UGStudent<span class="op">::</span>UGStudent<span class="op">(</span><span class="bu">std::</span>string_view name<span class="op">,</span> <span class="dt">int</span> age<span class="op">,</span> <span class="dt">double</span> tuition<span class="op">)</span></span>
+<span id="cb14-6"><a href=""></a>    <span class="op">:</span> Student<span class="op">{</span>name<span class="op">,</span> age<span class="op">,</span> tuition<span class="op">}</span> <span class="op">{}</span></span>
+<span id="cb14-7"><a href=""></a></span>
+<span id="cb14-8"><a href=""></a><span class="dt">void</span> UGStudent<span class="op">::</span>write_BSc_thesis<span class="op">()</span> <span class="at">const</span> <span class="op">{</span></span>
+<span id="cb14-9"><a href=""></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">"Student (ID: "</span> <span class="op">&lt;&lt;</span> get_id<span class="op">()</span> <span class="op">&lt;&lt;</span> <span class="st">") is writing the thesis"</span> <span class="op">&lt;&lt;</span> <span class="bu">std::</span>endl<span class="op">;</span></span>
+<span id="cb14-10"><a href=""></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</figure>
+</div>
+</section></section>
+<section>
+<section id="order-of-construction-of-derived-classes" class="title-slide slide level1 center">
+<h1>Order of construction of derived classes</h1>
+<p>In this lesson, we take a closer look at the order of construction that happens when a derived class is instantiated.</p>
+</section>
+<section id="order-of-constructors" class="slide level2">
+<h2>Order of constructors</h2>
+<p>➥&nbsp; Let us look at this simple code involving two classes</p>
+<div id="lst-parent-and-child" class="listing quarto-float quarto-figure quarto-figure-left">
+<figure class="quarto-float quarto-float-lst">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-parent-and-child-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Listing&nbsp;15: Two simple classes <code>Parent</code> and <code>Child</code> which inherits from <code>Parent</code>. Filename=<code>parent_and_child.cpp</code>
+</figcaption>
+<div aria-describedby="lst-parent-and-child-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode numberSource cpp number-lines code-with-copy"><code class="sourceCode cpp"><span id="cb15-1"><a href=""></a><span class="kw">class</span> Parent</span>
+<span id="cb15-2"><a href=""></a><span class="op">{</span></span>
+<span id="cb15-3"><a href=""></a><span class="kw">public</span><span class="op">:</span></span>
+<span id="cb15-4"><a href=""></a>    <span class="dt">int</span> parent_value <span class="op">{};</span></span>
+<span id="cb15-5"><a href=""></a></span>
+<span id="cb15-6"><a href=""></a>    Parent<span class="op">(</span><span class="dt">int</span> value<span class="op">=</span><span class="dv">0</span><span class="op">)</span></span>
+<span id="cb15-7"><a href=""></a>        <span class="op">:</span> parent_value <span class="op">{</span> value <span class="op">}</span></span>
+<span id="cb15-8"><a href=""></a>    <span class="op">{</span></span>
+<span id="cb15-9"><a href=""></a>    <span class="op">}</span></span>
+<span id="cb15-10"><a href=""></a></span>
+<span id="cb15-11"><a href=""></a>    <span class="dt">int</span> get_value<span class="op">()</span> <span class="at">const</span> <span class="op">{</span> <span class="cf">return</span> parent_value<span class="op">;</span> <span class="op">}</span></span>
+<span id="cb15-12"><a href=""></a><span class="op">};</span></span>
+<span id="cb15-13"><a href=""></a></span>
+<span id="cb15-14"><a href=""></a><span class="kw">class</span> Child<span class="op">:</span> <span class="kw">public</span> Parent</span>
+<span id="cb15-15"><a href=""></a><span class="op">{</span></span>
+<span id="cb15-16"><a href=""></a><span class="kw">public</span><span class="op">:</span></span>
+<span id="cb15-17"><a href=""></a>    <span class="dt">double</span> child_value <span class="op">{};</span></span>
+<span id="cb15-18"><a href=""></a></span>
+<span id="cb15-19"><a href=""></a>    Child<span class="op">(</span><span class="dt">double</span> value<span class="op">=</span><span class="fl">0.0</span><span class="op">)</span></span>
+<span id="cb15-20"><a href=""></a>        <span class="op">:</span> child_value <span class="op">{</span> value <span class="op">}</span></span>
+<span id="cb15-21"><a href=""></a>    <span class="op">{</span></span>
+<span id="cb15-22"><a href=""></a>    <span class="op">}</span></span>
+<span id="cb15-23"><a href=""></a></span>
+<span id="cb15-24"><a href=""></a>    <span class="dt">double</span> get_subvalue<span class="op">()</span> <span class="at">const</span> <span class="op">{</span> <span class="cf">return</span> child_value<span class="op">;</span> <span class="op">}</span></span>
+<span id="cb15-25"><a href=""></a><span class="op">};</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</figure>
+</div>
+</section>
+<section id="order-of-construction-of-derived-classes-diagram" class="slide level2">
+<h2>Order of construction of derived classes: Diagram</h2>
+<p>The diagram of the above code snippet is easy:</p>
+<div class="cell" data-reveal="true" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class=""><p></p>
+<div>
+<pre class="mermaid mermaid-js">classDiagram
+    direction TD
+    class Parent {
+        -parent_value double
+        +get_parent_value() double
+    }
+
+    class Child {
+        -child_value double
+        +get_child_value() double
+    }
+
+    Parent &lt;|-- Child
+
+    %% Styling (Optional but helpful)
+    style Parent fill:#f9f,stroke:#333,stroke-width:2px
+    style Child fill:#bbf,stroke:#333
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+<p>✎&nbsp; The members of <code>Parent</code> are <strong>not</strong> copied into <code>Child</code>.</p>
+<p>✎&nbsp; Instead, we can consider <code>Child</code> and <code>Parent</code> as a two-part class: one part <code>Child</code> + one part <code>Parent</code></p>
+</section>
+<section id="order-of-construction-of-derived-classes-a-closer-look" class="slide level2">
+<h2>Order of construction of derived classes: A closer look</h2>
+<div id="lst-parent-and-child-main" class="listing quarto-float quarto-figure quarto-figure-left">
+<figure class="quarto-float quarto-float-lst">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-parent-and-child-main-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Listing&nbsp;16: The constructor of the <code>Parent</code> class is executed before the constructor of the <code>Child</code> class. Filename=<code>parent_and_child_with_main.cpp</code>
+</figcaption>
+<div aria-describedby="lst-parent-and-child-main-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode numberSource cpp number-lines code-with-copy"><code class="sourceCode cpp"><span id="cb16-1"><a href=""></a><span class="pp">#include </span><span class="im">&lt;iostream&gt;</span></span>
+<span id="cb16-2"><a href=""></a><span class="kw">class</span> Parent</span>
+<span id="cb16-3"><a href=""></a><span class="op">{</span></span>
+<span id="cb16-4"><a href=""></a><span class="kw">public</span><span class="op">:</span></span>
+<span id="cb16-5"><a href=""></a>    <span class="dt">int</span> parent_value <span class="op">{};</span></span>
+<span id="cb16-6"><a href=""></a></span>
+<span id="cb16-7"><a href=""></a>    Parent<span class="op">(</span><span class="dt">int</span> value<span class="op">=</span><span class="dv">0</span><span class="op">)</span></span>
+<span id="cb16-8"><a href=""></a>        <span class="op">:</span> parent_value <span class="op">{</span> value <span class="op">}</span></span>
+<span id="cb16-9"><a href=""></a>    <span class="op">{</span> <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">"Parent object is constructed!</span><span class="sc">\n</span><span class="st">"</span><span class="op">;</span> <span class="op">}</span></span>
+<span id="cb16-10"><a href=""></a></span>
+<span id="cb16-11"><a href=""></a>    <span class="dt">int</span> get_value<span class="op">()</span> <span class="at">const</span> <span class="op">{</span> <span class="cf">return</span> parent_value<span class="op">;</span> <span class="op">}</span></span>
+<span id="cb16-12"><a href=""></a><span class="op">};</span></span>
+<span id="cb16-13"><a href=""></a></span>
+<span id="cb16-14"><a href=""></a><span class="kw">class</span> Child<span class="op">:</span> <span class="kw">public</span> Parent</span>
+<span id="cb16-15"><a href=""></a><span class="op">{</span></span>
+<span id="cb16-16"><a href=""></a><span class="kw">public</span><span class="op">:</span></span>
+<span id="cb16-17"><a href=""></a>    <span class="dt">double</span> child_value <span class="op">{};</span></span>
+<span id="cb16-18"><a href=""></a></span>
+<span id="cb16-19"><a href=""></a>    Child<span class="op">(</span><span class="dt">double</span> value<span class="op">=</span><span class="fl">0.0</span><span class="op">)</span></span>
+<span id="cb16-20"><a href=""></a>        <span class="op">:</span> child_value <span class="op">{</span> value <span class="op">}</span></span>
+<span id="cb16-21"><a href=""></a>    <span class="op">{</span> <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">"Child object is constructed!</span><span class="sc">\n</span><span class="st">"</span><span class="op">;</span> <span class="op">}</span></span>
+<span id="cb16-22"><a href=""></a></span>
+<span id="cb16-23"><a href=""></a>    <span class="dt">double</span> get_subvalue<span class="op">()</span> <span class="at">const</span> <span class="op">{</span> <span class="cf">return</span> child_value<span class="op">;</span> <span class="op">}</span></span>
+<span id="cb16-24"><a href=""></a><span class="op">};</span></span>
+<span id="cb16-25"><a href=""></a></span>
+<span id="cb16-26"><a href=""></a><span class="dt">int</span> main <span class="op">()</span></span>
+<span id="cb16-27"><a href=""></a><span class="op">{</span></span>
+<span id="cb16-28"><a href=""></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">"Instantiating a Parent object!</span><span class="sc">\n</span><span class="st">"</span><span class="op">;</span></span>
+<span id="cb16-29"><a href=""></a>    Parent parent<span class="op">;</span></span>
+<span id="cb16-30"><a href=""></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">"===============================</span><span class="sc">\n</span><span class="st">"</span><span class="op">;</span></span>
+<span id="cb16-31"><a href=""></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">"Instantiating a Child object!</span><span class="sc">\n</span><span class="st">"</span><span class="op">;</span></span>
+<span id="cb16-32"><a href=""></a>    Child child<span class="op">;</span></span>
+<span id="cb16-33"><a href=""></a></span>
+<span id="cb16-34"><a href=""></a>    <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb16-35"><a href=""></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</figure>
+</div>
+<p>➥&nbsp; The constructor of <code>Parent</code> class is executed before the constructor of <code>Child</code> class is excuted when a <code>Child</code> object is created.</p>
+</section>
+<section id="order-of-construction-for-inheritance-chains" class="slide level2">
+<h2>Order of construction for inheritance chains</h2>
+<p>➥&nbsp; Let us look at this example</p>
+<div class="cell" data-reveal="true" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class=""><p></p>
+<div>
+<pre class="mermaid mermaid-js">classDiagram
+    direction LR
+    class A {
+    }
+
+    class B {
+    }
+
+    class C {
+    }
+
+    class D {
+    }
+
+    A &lt;|-- B
+    B &lt;|-- C
+    C &lt;|-- D
+
+    %% Styling (Optional but helpful)
+    style A fill:#f9f,stroke:#333,stroke-width:2px
+    style B fill:#bbf,stroke:#333
+    style C fill:#bbf,stroke:#333
+    style D fill:#bbf,stroke:#333
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+<p><strong>Question</strong> If I create an object of class <code>D</code>, what would you expect to be executed?</p>
+<div class="fragment">
+<p>✎ The above idea/knowledge applies naturally to <strong>inheritance chains</strong>:</p>
+<ul>
+<li>the great grandparent <code>A</code> constructor is executed, <strong>then</strong></li>
+<li>the grandparent <code>B</code> constructed is executed, <strong>then</strong></li>
+<li>the parent <code>C</code> constructor is executed, and <strong>then</strong></li>
+<li>the child <code>D</code> constructor is executed.</li>
+</ul>
+</div>
+</section>
+<section id="order-of-construction-for-inheritance-chains-code-demonstration" class="slide level2">
+<h2>Order of construction for inheritance chains: Code demonstration</h2>
+<div id="lst-inheritance-chain-construction-order" class="listing quarto-float quarto-figure quarto-figure-left">
+<figure class="quarto-float quarto-float-lst">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-inheritance-chain-construction-order-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Listing&nbsp;17: Order of construction of derived classes in an inheritance chain. Filename=<code>inheritance_chain_four_classes.cpp</code>
+</figcaption>
+<div aria-describedby="lst-inheritance-chain-construction-order-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode numberSource cpp number-lines code-with-copy"><code class="sourceCode cpp"><span id="cb17-1"><a href=""></a><span class="pp">#include </span><span class="im">&lt;iostream&gt;</span></span>
+<span id="cb17-2"><a href=""></a></span>
+<span id="cb17-3"><a href=""></a><span class="kw">class</span> A</span>
+<span id="cb17-4"><a href=""></a><span class="op">{</span></span>
+<span id="cb17-5"><a href=""></a><span class="kw">public</span><span class="op">:</span></span>
+<span id="cb17-6"><a href=""></a>    A<span class="op">()</span> <span class="op">{</span> <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">"</span><span class="sc">\t</span><span class="st">Constructor of A</span><span class="sc">\n</span><span class="st">"</span><span class="op">;</span> <span class="op">}</span></span>
+<span id="cb17-7"><a href=""></a><span class="op">};</span></span>
+<span id="cb17-8"><a href=""></a></span>
+<span id="cb17-9"><a href=""></a><span class="kw">class</span> B<span class="op">:</span> <span class="kw">public</span> A</span>
+<span id="cb17-10"><a href=""></a><span class="op">{</span></span>
+<span id="cb17-11"><a href=""></a><span class="kw">public</span><span class="op">:</span></span>
+<span id="cb17-12"><a href=""></a>    B<span class="op">()</span> <span class="op">{</span> <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">"</span><span class="sc">\t</span><span class="st">Constructor of B</span><span class="sc">\n</span><span class="st">"</span><span class="op">;</span> <span class="op">}</span></span>
+<span id="cb17-13"><a href=""></a><span class="op">};</span></span>
+<span id="cb17-14"><a href=""></a></span>
+<span id="cb17-15"><a href=""></a><span class="kw">class</span> C<span class="op">:</span> <span class="kw">public</span> B</span>
+<span id="cb17-16"><a href=""></a><span class="op">{</span></span>
+<span id="cb17-17"><a href=""></a><span class="kw">public</span><span class="op">:</span></span>
+<span id="cb17-18"><a href=""></a>    C<span class="op">()</span> <span class="op">{</span> <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">"</span><span class="sc">\t</span><span class="st">Constructor of C</span><span class="sc">\n</span><span class="st">"</span><span class="op">;</span> <span class="op">}</span></span>
+<span id="cb17-19"><a href=""></a><span class="op">};</span></span>
+<span id="cb17-20"><a href=""></a></span>
+<span id="cb17-21"><a href=""></a><span class="kw">class</span> D<span class="op">:</span> <span class="kw">public</span> C</span>
+<span id="cb17-22"><a href=""></a><span class="op">{</span></span>
+<span id="cb17-23"><a href=""></a><span class="kw">public</span><span class="op">:</span></span>
+<span id="cb17-24"><a href=""></a>    D<span class="op">()</span> <span class="op">{</span> <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">"</span><span class="sc">\t</span><span class="st">Constructor of D</span><span class="sc">\n</span><span class="st">"</span><span class="op">;</span> <span class="op">}</span></span>
+<span id="cb17-25"><a href=""></a><span class="op">};</span></span>
+<span id="cb17-26"><a href=""></a></span>
+<span id="cb17-27"><a href=""></a><span class="dt">int</span> main<span class="op">()</span></span>
+<span id="cb17-28"><a href=""></a><span class="op">{</span></span>
+<span id="cb17-29"><a href=""></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">"Constructing A: </span><span class="sc">\n</span><span class="st">"</span><span class="op">;</span></span>
+<span id="cb17-30"><a href=""></a>    A a<span class="op">;</span></span>
+<span id="cb17-31"><a href=""></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">"Constructing B: </span><span class="sc">\n</span><span class="st">"</span><span class="op">;</span></span>
+<span id="cb17-32"><a href=""></a>    B b<span class="op">;</span></span>
+<span id="cb17-33"><a href=""></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">"Constructing C: </span><span class="sc">\n</span><span class="st">"</span><span class="op">;</span></span>
+<span id="cb17-34"><a href=""></a>    C c<span class="op">;</span></span>
+<span id="cb17-35"><a href=""></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">"Constructing D: </span><span class="sc">\n</span><span class="st">"</span><span class="op">;</span></span>
+<span id="cb17-36"><a href=""></a>    D d<span class="op">;</span></span>
+<span id="cb17-37"><a href=""></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</figure>
+</div>
+<p><a href="./cpp/inheritance_chain_four_classes.cpp">source-code</a></p>
+</section></section>
+<section>
+<section id="constructors-and-initialization-of-derived-classes" class="title-slide slide level1 center">
+<h1>Constructors and initialization of derived classes</h1>
+<p>✎&nbsp; In Python, we can use <code>super()</code> to access the parent’s data and member functions.</p>
+<p>✎&nbsp; Thus, we can write <code>super().__init__(self,...)</code> to use the constructor of the parent class.</p>
+<div id="c82fbdb6" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href=""></a><span class="kw">class</span> UniPerson:</span>
+<span id="cb18-2"><a href=""></a>    </span>
+<span id="cb18-3"><a href=""></a>    nextID <span class="op">=</span> <span class="dv">10000</span>  <span class="co"># class variable</span></span>
+<span id="cb18-4"><a href=""></a></span>
+<span id="cb18-5"><a href=""></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, name<span class="op">=</span><span class="st">""</span>, age<span class="op">=</span><span class="dv">18</span>):</span>
+<span id="cb18-6"><a href=""></a>        <span class="va">self</span>.name, <span class="va">self</span>.age <span class="op">=</span> name, age</span>
+<span id="cb18-7"><a href=""></a>        <span class="va">self</span>.<span class="bu">id</span> <span class="op">=</span> UniPerson.nextID</span>
+<span id="cb18-8"><a href=""></a>        UniPerson.nextID <span class="op">+=</span> <span class="dv">1</span></span>
+<span id="cb18-9"><a href=""></a><span class="kw">class</span> Lecturer(UniPerson):</span>
+<span id="cb18-10"><a href=""></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, name<span class="op">=</span><span class="st">""</span>, age<span class="op">=</span><span class="dv">18</span>):</span>
+<span id="cb18-11"><a href=""></a>        <span class="bu">super</span>().<span class="fu">__init__</span>(name, age)</span>
+<span id="cb18-12"><a href=""></a>        <span class="bu">print</span>(<span class="ss">f"Lecturer </span><span class="sc">{</span><span class="va">self</span><span class="sc">.</span>name<span class="sc">}</span><span class="ss"> is recruited."</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>➥&nbsp; This will be the topic of this lesson.</p>
+</section>
+<section id="revisit-python-example" class="slide level2">
+<h2>Revisit Python example</h2>
+<div id="58ca90ca" class="cell" data-execution_count="2">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href=""></a><span class="kw">class</span> UniPerson:</span>
+<span id="cb19-2"><a href=""></a>    nextID <span class="op">=</span> <span class="dv">10000</span>  <span class="co"># class variable, functioning like static int nextID in C++</span></span>
+<span id="cb19-3"><a href=""></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, name<span class="op">=</span><span class="st">""</span>, age<span class="op">=</span><span class="dv">18</span>):</span>
+<span id="cb19-4"><a href=""></a>        <span class="va">self</span>.name, <span class="va">self</span>.age <span class="op">=</span> name, age</span>
+<span id="cb19-5"><a href=""></a>        <span class="va">self</span>.<span class="bu">id</span> <span class="op">=</span> UniPerson.nextID<span class="op">;</span> UniPerson.nextID <span class="op">+=</span> <span class="dv">1</span>   <span class="co"># fit into the slide</span></span>
+<span id="cb19-6"><a href=""></a><span class="kw">class</span> Lecturer(UniPerson):</span>
+<span id="cb19-7"><a href=""></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, name<span class="op">=</span><span class="st">""</span>, age<span class="op">=</span><span class="dv">18</span>):</span>
+<span id="cb19-8"><a href=""></a>        <span class="bu">super</span>().<span class="fu">__init__</span>(name, age)</span>
+<span id="cb19-9"><a href=""></a>        <span class="bu">print</span>(<span class="ss">f"Lecturer </span><span class="sc">{</span><span class="va">self</span><span class="sc">.</span>name<span class="sc">}</span><span class="ss"> is recruited."</span>)</span>
+<span id="cb19-10"><a href=""></a>    <span class="kw">def</span> <span class="fu">__str__</span>(<span class="va">self</span>):      <span class="co"># print out the name of the lecturer</span></span>
+<span id="cb19-11"><a href=""></a>        <span class="cf">return</span> <span class="va">self</span>.name</span>
+<span id="cb19-12"><a href=""></a></span>
+<span id="cb19-13"><a href=""></a>khiem <span class="op">=</span> Lecturer(<span class="st">"Khiem"</span>, <span class="dv">42</span>)</span>
+<span id="cb19-14"><a href=""></a><span class="bu">print</span>(<span class="ss">f"ID assigned for </span><span class="sc">{</span>khiem<span class="sc">}</span><span class="ss">: </span><span class="sc">{</span>khiem<span class="sc">.</span><span class="bu">id</span><span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Lecturer Khiem is recruited.
+ID assigned for Khiem: 10000</code></pre>
+</div>
+</div>
+</section>
+<section id="initialization-involving-inheritance-a-problem-example" class="slide level2">
+<h2>Initialization involving inheritance: A problem example</h2>
+<p>➥&nbsp; Look at this simple example</p>
+<div id="lst-initialization-of-derived-classes" class="listing quarto-float quarto-figure quarto-figure-left">
+<figure class="quarto-float quarto-float-lst">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-initialization-of-derived-classes-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Listing&nbsp;18: An example illustrating the initialization process of a derived class. Filename=<code>initialization_of_derived_class.cpp</code>
+</figcaption>
+<div aria-describedby="lst-initialization-of-derived-classes-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="sourceCode numberSource cpp number-lines code-with-copy"><code class="sourceCode cpp"><span id="cb21-1"><a href=""></a><span class="kw">class</span> Parent</span>
+<span id="cb21-2"><a href=""></a><span class="op">{</span></span>
+<span id="cb21-3"><a href=""></a><span class="kw">public</span><span class="op">:</span></span>
+<span id="cb21-4"><a href=""></a>    <span class="dt">int</span> id <span class="op">{};</span></span>
+<span id="cb21-5"><a href=""></a></span>
+<span id="cb21-6"><a href=""></a>    Parent<span class="op">(</span><span class="dt">int</span> id<span class="op">=</span><span class="dv">0</span><span class="op">)</span> <span class="op">:</span> id<span class="op">{</span> id <span class="op">}</span>  <span class="op">{}</span></span>
+<span id="cb21-7"><a href=""></a></span>
+<span id="cb21-8"><a href=""></a>    <span class="dt">int</span> get_id<span class="op">()</span> <span class="at">const</span> <span class="op">{</span> <span class="cf">return</span> id<span class="op">;</span> <span class="op">}</span></span>
+<span id="cb21-9"><a href=""></a><span class="op">};</span></span>
+<span id="cb21-10"><a href=""></a></span>
+<span id="cb21-11"><a href=""></a><span class="kw">class</span> Child<span class="op">:</span> <span class="kw">public</span> Parent</span>
+<span id="cb21-12"><a href=""></a><span class="op">{</span></span>
+<span id="cb21-13"><a href=""></a><span class="kw">public</span><span class="op">:</span></span>
+<span id="cb21-14"><a href=""></a>    <span class="dt">double</span> cost <span class="op">{};</span></span>
+<span id="cb21-15"><a href=""></a></span>
+<span id="cb21-16"><a href=""></a>    Child<span class="op">(</span><span class="dt">double</span> cost<span class="op">=</span><span class="fl">0.0</span><span class="op">)</span> <span class="op">:</span> cost<span class="op">{</span> cost <span class="op">}</span> <span class="op">{}</span></span>
+<span id="cb21-17"><a href=""></a></span>
+<span id="cb21-18"><a href=""></a>    <span class="dt">double</span> get_cost<span class="op">()</span> <span class="at">const</span> <span class="op">{</span> <span class="cf">return</span> cost<span class="op">;</span> <span class="op">}</span></span>
+<span id="cb21-19"><a href=""></a><span class="op">};</span></span>
+<span id="cb21-20"><a href=""></a></span>
+<span id="cb21-21"><a href=""></a><span class="dt">int</span> main<span class="op">()</span></span>
+<span id="cb21-22"><a href=""></a><span class="op">{</span>   </span>
+<span id="cb21-23"><a href=""></a>    <span class="co">// With non-derived classes, constructors only have to worry about</span></span>
+<span id="cb21-24"><a href=""></a>    <span class="co">// their own members.</span></span>
+<span id="cb21-25"><a href=""></a>    Parent parent <span class="op">{</span> <span class="dv">42</span> <span class="op">};</span>   <span class="co">// use Parent(int) constructor</span></span>
+<span id="cb21-26"><a href=""></a></span>
+<span id="cb21-27"><a href=""></a>    <span class="co">// How about the the "id" member that child inherits from Parent?</span></span>
+<span id="cb21-28"><a href=""></a>    Child child <span class="op">{</span> <span class="fl">42.24</span> <span class="op">};</span>  <span class="co">// use Child(double) constructor</span></span>
+<span id="cb21-29"><a href=""></a></span>
+<span id="cb21-30"><a href=""></a>    <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb21-31"><a href=""></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</figure>
+</div>
+</section>
+<section id="initialization-looking-at-parent-class" class="slide level2">
+<h2>Initialization: Looking at <code>Parent</code> class</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22"><pre class="sourceCode numberSource cpp number-lines code-with-copy"><code class="sourceCode cpp"><span id="cb22-1"><a href=""></a>Parent parent<span class="op">{</span> <span class="dv">42</span> <span class="op">};</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>What happens when <code>Parent</code> is instantiated:</p>
+<ul>
+<li>Memory for base class (<code>Parent</code>) is set aside.</li>
+<li>Appropriate <code>Parent</code> constructor is called.</li>
+<li>Member initializer list initializes variables</li>
+<li>Body of constructor executes.</li>
+<li>Control is returned to the caller.</li>
+</ul>
+</section>
+<section id="initialization-looking-at-child-class" class="slide level2">
+<h2>Initialization: Looking at <code>Child</code> class</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23"><pre class="sourceCode numberSource cpp number-lines code-with-copy"><code class="sourceCode cpp"><span id="cb23-1"><a href=""></a>Parent child<span class="op">{</span> <span class="fl">42.24</span> <span class="op">};</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>What happens when <code>Child</code> is instantiated:</p>
+<ul>
+<li>Memory for derived class (<code>Child</code>) is set aside.</li>
+<li>Appropriate <code>Child</code> constructor is called.</li>
+<li><span style="color:red"><em><code>Parent</code> object is constructed first using the pappropriate <code>Parent</code> constructor</em></span>. If no parent constructor is specified, the default constructor will be used.</li>
+<li>Member initializer list initializes variables.</li>
+<li>Body of the constructor executes.</li>
+<li>Control is returned to the caller.</li>
+</ul>
+<p><strong>Question</strong></p>
+<ul>
+<li>How about the <code>id</code> member that a <code>Child</code> object inherits from <code>Parent</code>?</li>
+<li>How can we initialize it when we create an object of <code>Child</code> class.</li>
+</ul>
 
 </section></section>
     </div>

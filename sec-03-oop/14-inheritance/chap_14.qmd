@@ -318,7 +318,9 @@ classDiagram
 
 ## Inheritance chains
 
-&#9998;&nbsp; We can comeback to our bigger diagram: `UGStudent`, `PGTStudent` and `PGRStudent` are all derived from class `Student` and thus we have [**inherintance chain**]{style:"color:red"}
+&#9998;&nbsp; We can comeback to our bigger diagram
+
+`UGStudent`, `PGTStudent` and `PGRStudent` are all derived from class `Student` and thus we have [**inherintance chain**]{style="color:red"}
 
 ```{mermaid}
 %%| echo: false
@@ -403,7 +405,227 @@ We build four classes and one main program. Each class is done by one header fil
 ```
 :::
 
+## class `Student`: Header file
+
+::: {#lst-header-file-student lst-cap="Header file for class `Student` Filename=`uni-program/student.h`"}
+```{.cpp}
+{{< include ./cpp/uni-program/student.h >}}
+```
+:::
+
+## class `Student`: Implementation file
+
+::: {#lst-implementation-file-student lst-cap="Implementation file for class `Student` Filename=`uni-program/student.cpp`"}
+```{.cpp}
+{{< include ./cpp/uni-program/student.cpp >}}
+```
+:::
+
+## class `UGStudent`: Header file
+
+::: {#lst-header-file-ugstudent lst-cap="Header file for class `UGStudent` Filename=`uni-program/ugstudent.h`"}
+```{.cpp}
+{{< include ./cpp/uni-program/ugstudent.h >}}
+```
+:::
+
+## class `UGStudent`: Implementation file
+
+::: {#lst-implementation-file-ugstudent lst-cap="Implementation file for class `UGStudent` Filename=`uni-program/ugstudent.cpp`"}
+```{.cpp}
+{{< include ./cpp/uni-program/ugstudent.cpp >}}
+```
+:::
+
+# Order of construction of derived classes
+
+In this lesson, we take a closer look at the order of construction that happens when a derived class is instantiated.
+
+## Order of constructors
+
+&#10149;&nbsp; Let us look at this simple code involving two classes
+
+::: {#lst-parent-and-child lst-cap="Two simple classes `Parent` and `Child` which inherits from `Parent`. Filename=`parent_and_child.cpp`"}
+```{.cpp}
+{{< include ./cpp/parent_and_child.cpp >}}
+```
+:::
+
+## Order of construction of derived classes: Diagram
+
+The diagram of the above code snippet is easy:
+
+```{mermaid}
+%%| echo: false
+classDiagram
+    direction TD
+    class Parent {
+        -parent_value double
+        +get_parent_value() double
+    }
+
+    class Child {
+        -child_value double
+        +get_child_value() double
+    }
+
+    Parent <|-- Child
+
+    %% Styling (Optional but helpful)
+    style Parent fill:#f9f,stroke:#333,stroke-width:2px
+    style Child fill:#bbf,stroke:#333
+```
+
+&#9998;&nbsp; The members of `Parent` are **not** copied into `Child`.
+
+&#9998;&nbsp; Instead, we can consider `Child` and `Parent` as a two-part class: one part `Child` + one part `Parent`
+
+## Order of construction of derived classes: A closer look
+
+::: {#lst-parent-and-child-main lst-cap="The constructor of the `Parent` class is executed before the constructor of the `Child` class. Filename=`parent_and_child_with_main.cpp`"}
+```{.cpp}
+{{< include ./cpp/parent_and_child_with_main.cpp >}}
+```
+:::
+
+&#10149;&nbsp; The constructor of `Parent` class is executed before the constructor of `Child` class is excuted when a `Child` object is created.
+
+## Order of construction for inheritance chains
+
+&#10149;&nbsp; Let us look at this example
+
+```{mermaid}
+%%| echo: false
+classDiagram
+    direction LR
+    class A {
+    }
+
+    class B {
+    }
+
+    class C {
+    }
+
+    class D {
+    }
+
+    A <|-- B
+    B <|-- C
+    C <|-- D
+
+    %% Styling (Optional but helpful)
+    style A fill:#f9f,stroke:#333,stroke-width:2px
+    style B fill:#bbf,stroke:#333
+    style C fill:#bbf,stroke:#333
+    style D fill:#bbf,stroke:#333
+```
+
+**Question** If I create an object of class `D`, what would you expect to be executed?
+
+:::{.fragment}
+&#9998; The above idea/knowledge applies naturally to **inheritance chains**: 
+
+- the great grandparent `A` constructor is executed, **then** 
+- the grandparent `B` constructed is executed, **then** 
+- the parent `C` constructor is executed, and **then** 
+- the child `D` constructor is executed.
+:::
+
+## Order of construction for inheritance chains: Code demonstration
+
+::: {#lst-inheritance-chain-construction-order lst-cap="Order of construction of derived classes in an inheritance chain. Filename=`inheritance_chain_four_classes.cpp`"}
+```{.cpp}
+{{< include ./cpp/inheritance_chain_four_classes.cpp >}}
+```
+:::
+[source-code](./cpp/inheritance_chain_four_classes.cpp)
 
 
+# Constructors and initialization of derived classes
 
+&#9998;&nbsp; In Python, we can use `super()` to access the parent's data and member functions.
+
+&#9998;&nbsp; Thus, we can write `super().__init__(self,...)` to use the constructor of the parent class.
+
+```{python}
+class UniPerson:
+    
+    nextID = 10000  # class variable
+
+    def __init__(self, name="", age=18):
+        self.name, self.age = name, age
+        self.id = UniPerson.nextID
+        UniPerson.nextID += 1
+class Lecturer(UniPerson):
+    def __init__(self, name="", age=18):
+        super().__init__(name, age)
+        print(f"Lecturer {self.name} is recruited.")
+```
+
+&#10149;&nbsp; This will be the topic of this lesson.
+
+
+## Revisit Python example
+
+```{python}
+class UniPerson:
+    nextID = 10000  # class variable, functioning like static int nextID in C++
+    def __init__(self, name="", age=18):
+        self.name, self.age = name, age
+        self.id = UniPerson.nextID; UniPerson.nextID += 1   # fit into the slide
+class Lecturer(UniPerson):
+    def __init__(self, name="", age=18):
+        super().__init__(name, age)
+        print(f"Lecturer {self.name} is recruited.")
+    def __str__(self):      # print out the name of the lecturer
+        return self.name
+
+khiem = Lecturer("Khiem", 42)
+print(f"ID assigned for {khiem}: {khiem.id}")
+```
+
+## Initialization involving inheritance: A problem example
+
+&#10149;&nbsp; Look at this simple example
+
+::: {#lst-initialization-of-derived-classes lst-cap="An example illustrating the initialization process of a derived class. Filename=`initialization_of_derived_class.cpp`"}
+```{.cpp}
+{{< include ./cpp/initialization_of_derived_class.cpp >}}
+```
+:::
+
+## Initialization: Looking at `Parent` class
+
+```{.cpp}
+Parent parent{ 42 };
+```
+
+What happens when `Parent` is instantiated:
+
+- Memory for base class (`Parent`) is set aside.
+- Appropriate `Parent` constructor is called.
+- Member initializer list initializes variables
+- Body of constructor executes.
+- Control is returned to the caller.
+
+## Initialization: Looking at `Child` class
+
+```{.cpp}
+Parent child{ 42.24 };
+```
+
+What happens when `Child` is instantiated:
+
+- Memory for derived class (`Child`) is set aside.
+- Appropriate `Child` constructor is called.
+- [*`Parent` object is constructed first using the pappropriate `Parent` constructor*]{style="color:red"}. If no parent constructor is specified, the default constructor will be used.
+- Member initializer list initializes variables.
+- Body of the constructor executes.
+- Control is returned to the caller.
+
+**Question** 
+
+- How about the `id` member that a `Child` object inherits from `Parent`? 
+- How can we initialize it when we create an object of `Child` class.
 
