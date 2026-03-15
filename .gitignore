@@ -55,3 +55,7 @@ sec-02-cpp-intermediate/06C-non-type-function-template
 extra/
 exams/
 formative-solution/
+
+assignments/assignment-02/data/mnist_full.csv
+assignments/assignment-02/data/mnist_mini.csv
+assignments/assignment-02/data/mnist_micro.csv
