@@ -200,6 +200,7 @@ print(f"X_poly =\n{X_poly[:4]}") # print the first 4 samples
 print(f"X_poly.shape = {X_poly.shape}")
 ```
 Since we don't need the bias feature $x^{0}$, let us redo this step without this bias feature
+
 ```{python}
 poly_features = PolynomialFeatures(degree=3, include_bias=False)
 X_poly = poly_features.fit_transform(X_data)
@@ -408,7 +409,7 @@ In this application, given an image of hand-written digit, we predict which numb
 
 First, we fetch the data online. This dataset has been used for benchmarking many machine learning models. The original dataset has $70000$ gray-scale image, all images have the same size $28 \times 28$. If we "unroll" the matrix of size $28\times 28$ into a single vector, this vector has size $28\cdot 28 = 784$. So, one single sample has $784$ features.
 
-```{.python}
+```{python}
 import pandas as pd
 from sklearn.datasets import fetch_openml
 
@@ -423,7 +424,7 @@ print(f"type(df) = {type(df)}")
 
 To make computing easy with `double` values in C++, I decide to scale the data into the `float64` (in Python) in the range $[0, 1]$.
 
-```{.python}
+```{python}
 pixel_columns = df.columns.drop('class')
 df[pixel_columns] = df[pixel_columns].astype('float64') / 255.0
 ```
@@ -441,13 +442,13 @@ The subset can be used to benchmark your implementation. Instead of training the
 :::
 
 First we create a `./data/mnist_full.csv` file using all $70000$ images in the original dataset.
-```{.python}
+```{python}
 print("Saving full dataset to 'mnist_full.csv'...")
 df.to_csv('./data/mnist_full.csv', index=False, header=False)
 ```
 
 Next, we create two files `./data/mnist_mini.csv` ($10000$ images) and `./data/mnist_micro.csv` ($3000$ images).
-```{.python}
+```{python}
 def generate_distribute(n_value):
     distribute = lambda x: x.sample(n=n_value, random_state=42) 
     return distribute   # distribute is a function object
@@ -458,7 +459,7 @@ for i in range(len(n_values)):
     print(f"Creating balanced {filenames[i]} with {10 * n_values[i]} images...")
     distribute = generate_distribute(n_value=n_values[i])
     df_subset = df.groupby('class').apply(distribute).reset_index(drop=True)
-
+    print(f"df_subset.shape = {df_subset.shape}")
     df_subset.to_csv(filenames[i], index=False, header=False)
 ```
 
@@ -484,6 +485,9 @@ y = df_shuffled.iloc[:, -1].values
 print(f"type(df) = {type(df)}")
 print(f"type(X) = {type(X)}")
 print(f"type(y) = {type(y)}")
+
+print(f"X.shape = {X.shape}")
+print(f"y.shape = {y.shape}")
 ```
 
 Now that we show $12$ images in the a grid of $3\times 4$ subplots.
@@ -514,8 +518,7 @@ Training the Logistic Regressio from **scikit-learn**, namely `LogisticRegressio
 
 
 ```{python}
-# We don't need to split the dataset into training set and test set. 
-# We just use all the given data here. We use max_iter=1000 to ensure
+# We don't need to split the dataset into training set and test set. We just use all the given data here. We use max_iter=1000 to ensure
 # convergence on the given dataset
 model = LogisticRegression(max_iter=1000) 
 model.fit(X, y)
@@ -534,8 +537,8 @@ fig.suptitle("Images and Predictions", fontsize=14)
 
 accuracy = accuracy_score(y_true=y, y_pred=y_predict)
 for i, ax in enumerate(axes.flatten()):
-    image = X_test[i].reshape(28, 28)
-    ax.imshow(image, cmap="inferno")
+    image = X[i].reshape(28, 28)
+    ax.imshow(image, cmap="magma")
     
     actual, predicted = y[i], y_predict[i]
     color = 'green' if predicted == actual else 'red'
@@ -544,7 +547,7 @@ for i, ax in enumerate(axes.flatten()):
     ax.axis(False)
 plt.tight_layout(rect=[0, 0.03, 1, 0.95])
 plt.show()
-
+```
 
 
 
