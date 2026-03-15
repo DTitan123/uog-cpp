@@ -9,7 +9,7 @@ author-meta: "Lecturer in Multiscale Materials"
 jupyter: false
 execute: 
   eval: true
-fformat: 
+format: 
     html:
         embed-resources: true
         grid:
