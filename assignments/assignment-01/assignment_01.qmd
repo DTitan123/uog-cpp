@@ -9,14 +9,35 @@ author-meta: "Lecturer in Multiscale Materials"
 jupyter: false
 format: 
     html:
-        page-layout: full
-        margin-left: 20px
-        margin-right: 20px
-    # pdf:clear
-    #   margin-left: 25px
-    #   margin-right: 25px
-    #   margin-top: 25px
-    #   margin-bottom: 25px
+        embed-resources: true
+        grid:
+            body-width: 1400px
+            margin-width: 20px
+            sidebar-width: 200px
+        # page-layout: full
+        # margin-left: 0.5em
+        # margin-right: 0.5em
+        # page-layout: full
+        # margin-left: 0.5em
+        # margin-right: 0.5em
+        css: style.css
+        number-sections: true
+        number-depth: 3
+        toc: true               # table of content
+        toc-location: left      # table of content on the left
+        toc-title: "Table of Content"   # table of content title
+
+    pdf:
+        embed-resources: true
+        geometry:
+            - top=24px
+            - bottom=24px
+            - left=36px
+            - right=36px
+        css: style.css
+        number-sections: true
+        number-depth: 2
+        colorlinks: true
 ---
 
 # Foreword
