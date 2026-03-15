@@ -9,7 +9,7 @@ author-meta: "Lecturer in Multiscale Materials"
 jupyter: false
 execute: 
   eval: true
-format: 
+fformat: 
     html:
         embed-resources: true
         grid:
@@ -19,7 +19,9 @@ format:
         # page-layout: full
         # margin-left: 0.5em
         # margin-right: 0.5em
-
+        # page-layout: full
+        # margin-left: 0.5em
+        # margin-right: 0.5em
         css: style.css
         number-sections: true
         number-depth: 3
@@ -27,16 +29,17 @@ format:
         toc-location: left      # table of content on the left
         toc-title: "Table of Content"   # table of content title
 
-    # pdf:
-    #     geometry:
-    #         - top=24px
-    #         - bottom=24px
-    #         - left=36px
-    #         - right=36px
-    #     css: style.css
-    #     number-sections: true
-    #     number-depth: 2
-    #     colorlinks: true
+    pdf:
+        embed-resources: true
+        geometry:
+            - top=24px
+            - bottom=24px
+            - left=36px
+            - right=36px
+        css: style.css
+        number-sections: true
+        number-depth: 2
+        colorlinks: true
 ---
 
 <!-- 
