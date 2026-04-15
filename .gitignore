@@ -59,3 +59,4 @@ formative-solution/
 assignments/assignment-02/data/mnist_full.csv
 assignments/assignment-02/data/mnist_mini.csv
 assignments/assignment-02/data/mnist_micro.csv
+.DS_Store
