@@ -1,10 +1,9 @@
-#include <iostream> //gives you access to cout (printing) and cin (input).
-#include <cstdlib>  // for rand()
-#include <ctime>    // for time()
-using namespace std; //lets you write cout instead of std::cout.
+#include <iostream> 
+#include <cstdlib>  
+#include <ctime>    
+using namespace std; 
 
-// This is a function definition.
-// It stays OUTSIDE main().
+// Prints the current state of the board.
 void drawBoard(char board[3][3]) { //char → each element is a character ('X', 'O', or ' ').
     
     system("clear");
@@ -21,12 +20,14 @@ void drawBoard(char board[3][3]) { //char → each element is a character ('X', 
     }
 }
 
+// Reads and validates the player's move.
 void playerMove(char board[3][3]) { 
     while (true) {
         int move;
         cout << "Select your move (numeric keypad 1-9): ";
         cin >> move;
 
+        // Converts keypad input into board row and column indices.
         int row = 2 - (move - 1) / 3;
         int col = (move - 1) % 3;
 
@@ -40,7 +41,7 @@ void playerMove(char board[3][3]) {
           }
     }
 }
-
+// Generates a random valid move for the computer.
 void computerMove(char board[3][3]) {
     while (true) {
         int move = rand() % 9 + 1;  // random number 1–9
@@ -55,6 +56,7 @@ void computerMove(char board[3][3]) {
     }
 }
 
+// Checks rows, columns, and diagonals for a winner.
 char checkWin(char board[3][3]) {
 
     // Check rows
@@ -94,8 +96,8 @@ char checkWin(char board[3][3]) {
 
 
 int main() { //int → main returns an integer (a number) to the operating system.
-
-    srand(time(0));  // seeds the random number generator
+    // Seeds the random number generator so the computer moves differ each game.
+    srand(time(0)); 
 
     // THIS is where the board belongs.
     char board[3][3] = {
