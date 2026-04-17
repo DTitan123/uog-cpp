@@ -1,4 +1,4 @@
-#include <fstream>
+#include "linear_reg.hpp"
 // Simple, beginner-friendly CSV reader.
 // Reads ../data/concrete.csv, treats the last column as the target,
 // and prints how many samples and features were loaded.
@@ -68,6 +68,22 @@ int main() {
     // Print dataset summary.
     std::cout << "Samples loaded: " << inputs.size() << "\n";
     std::cout << "Features per sample: " << inputs[0].size() << "\n";
+
+    sklearn_cpp::linear_model::LinearRegression model;
+
+model.fit(inputs, outputs, 1e-7, 1000);
+
+std::cout << "\nPrediction vs Actual:\n";
+std::cout << "-----------------------------\n";
+
+for (int i = 0; i < 5; i++) {
+    double pred = model.predict(inputs[i]);
+
+    std::cout << "Sample " << i
+              << " | Predicted: " << pred
+              << " | Actual: " << outputs[i]
+              << "\n";
+}
 
     return 0; // success
 }
