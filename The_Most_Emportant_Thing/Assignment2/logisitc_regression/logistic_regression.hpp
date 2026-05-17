@@ -15,7 +15,7 @@
 //     - predict_proba() : returns probability of belonging to class 1
 //     - predict()       : returns predicted class label (0 or 1)
 //     - score()         : returns accuracy on a given dataset
-//  Class structure was first to be defined, subsequently each function was then defined.
+//  Class structure was first to be defined as a skeleton to then subsequently each function was then defined.
 
 // Consistent with linear_reg.hpp and log_main.cpp in namespace and coding style.
 
@@ -43,7 +43,41 @@ public:
 LogisticRegression() : bias { 0.0 }, lambda { 0.01 } {} 
 // fit() receives the X matrix and the Y labels and sets the learning rate 
 //and the number of iterations. this thus finds the best weight and bias
-void fit(const std::vector<std::vector<double>>& X, const std::vector<double>& y,  double learning_rate = 1e-4, int iterations = 1000);
+void fit(const std::vector<std::vector<double>>& X, const std::vector<double>& y,  double learning_rate = 1e-4, int iterations = 1000) 
+{
+    // initialise variables
+    int m = X.size();      // number of samples
+    int n = X[0].size();   // number of features
+    weights.assign(n, 0.0);
+    bias= 0.0; 
+    double error{};
+    double weight_contribution{}; //refers to how much weight affects the error
+    std::vector<double>weight_contribution_accumulated;
+
+    for(int i{}; i<= iterations; ++i){
+        weight_contribution_accumulated.assign(n, 0.0);
+        double bias_accumulated= 0; 
+        
+        for(int j{}; j<m; ++j){
+            error = predict_proba(X[j]) - y[j];
+            for (int k{}; k<n; ++k){
+                weight_contribution = error * X[j][k];
+                weight_contribution_accumulated[k]+=weight_contribution;
+            }
+            bias_accumulated += error;
+        }
+
+        //updated bias and weight
+        for (int k{}; k<n; ++k){
+        weights[k] -= learning_rate * ((1.0/m) * weight_contribution_accumulated[k] + 2*lambda*weights[k]);
+        }
+        bias= bias- learning_rate*((1.0/m)*bias_accumulated+2*lambda*bias);
+
+    }
+
+}
+
+
 //returns probability of a given X being in class 1 
 double predict_proba(const std::vector<double>& x) const
 {   double z { bias };
@@ -58,8 +92,8 @@ double predict_proba(const std::vector<double>& x) const
 //if the probability is >= 0.5, return 1 otherwise return 0
 int predict(const std::vector<double>& x) const{
     int probability{};
-    //simple if-else as only two options available could use 
-    //boolean but if/else already within the other scripts so for consistency purposes it is used
+    //simple if-else as only two options available could use boolean 
+    //but if/else already within the other scripts so for consistency purposes it is used
     if(predict_proba(x)>= 0.5)
     {
     probability= 1;
@@ -71,7 +105,28 @@ int predict(const std::vector<double>& x) const{
     return probability;   
 }
 // takes x and y as inputs to then return the accuracy of the model as float
-double score(const std::vector<std::vector<double>>& X, const std::vector<double>& y) const;        
+double score(const std::vector<std::vector<double>>& X, const std::vector<double>& y) const
+{ 
+    int correct_counter{0}; // keeps count of correct predictions
+    double accuracy{}; // variable to store the final accuracy
+    
+    // loop to cycle through data, if x=y we increment, otherwise the loop continues
+    // for used rather than while, as number of data points known  
+    for( int i{}; i< X.size(); ++i)
+    { 
+        if (predict(X[i])== y[i])
+        { 
+            correct_counter++;
+        }
+        else {
+            continue;
+        }
+    }
+    // static_cast needed as result needed in double and we are dividing integers
+    accuracy = static_cast<double>(correct_counter) / X.size() ;
+    return accuracy; 
+}
+
 };
 }
 }
