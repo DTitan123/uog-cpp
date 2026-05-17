@@ -16,7 +16,7 @@
 //   1 = normal  ECG   (patient is fine)
 
 
-#include "log_rec.hpp"  // LogisticRegression class
+#include "logistic_regression.hpp"  // LogisticRegression class
 
 #include <algorithm>  // std::shuffle
 #include <fstream>    // std::ifstream
