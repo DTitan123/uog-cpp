@@ -1,14 +1,46 @@
 // This `main.cpp` does three things:
 //  1. Open and read a CSV file (relative path: ../data/concrete.csv).
 //  2. Parse each line into numeric features and a target value.
-//  3. Fit a simple LinearRegression model and print a small prediction demo.
+//  3. Fit a LinearRegression model, evaluate with R², and print a prediction demo.
 
 #include "linear_reg.hpp"
-#include <fstream>   // std::ifstream
-#include <iostream>  // std::cout, std::cerr
-#include <sstream>   // std::istringstream
-#include <string>    // std::string
-#include <vector>    // std::vector
+#include <fstream>    // std::ifstream
+#include <iostream>   // std::cout, std::cerr
+#include <sstream>    // std::istringstream
+#include <string>     // std::string
+#include <vector>     // std::vector
+#include <algorithm>  // std::shuffle
+#include <random>     // std::mt19937
+
+// train_test_split()
+// Shuffles indices with fixed seed 42 (matches assignment's random_state=42)
+// then splits into training and test sets based on test_ratio.
+void train_test_split(const std::vector<std::vector<double>>& X,
+                      const std::vector<double>& y,
+                      double test_ratio,
+                      std::vector<std::vector<double>>& X_train,
+                      std::vector<double>&               y_train,
+                      std::vector<std::vector<double>>& X_test,
+                      std::vector<double>&               y_test)
+{
+    const int m { static_cast<int>(X.size()) };
+    std::vector<int> indices(m);
+    for (int i { 0 }; i < m; ++i) indices[i] = i;
+    std::mt19937 rng(42); // fixed seed for reproducibility
+    std::shuffle(indices.begin(), indices.end(), rng);
+
+    const int n_test  { static_cast<int>(m * test_ratio) };
+    const int n_train { m - n_test };
+
+    for (int i { 0 }; i < n_train; ++i) {
+        X_train.push_back(X[indices[i]]);
+        y_train.push_back(y[indices[i]]);
+    }
+    for (int i { n_train }; i < m; ++i) {
+        X_test.push_back(X[indices[i]]);
+        y_test.push_back(y[indices[i]]);
+    }
+}
 
 int main() {
     // Open the CSV file using a relative path. Change this path if your CSV
@@ -26,8 +58,7 @@ int main() {
 
     std::string line;
 
-    // Read and discard the first line assuming it's a header row. If your CSV
-    // has no header, remove the getline below so the first data row is read.
+    // Read and discard the first line assuming it's a header row.
     if (!std::getline(file, line)) {
         std::cerr << "Error: file appears to be empty\n";
         return 1;
@@ -74,36 +105,39 @@ int main() {
     }
 
     // Print a short dataset summary so we know parsing succeeded.
-    std::cout << "Samples loaded: " << inputs.size() << "\n";
-    std::cout << "Features per sample: " << inputs[0].size() << "\n";
+    std::cout << "Samples loaded  : " << inputs.size() << "\n";
+    std::cout << "Features/sample : " << inputs[0].size() << "\n";
 
-    // Create and use the simple LinearRegression class defined in
-    // `linear_reg.hpp`. The model stores weights and a bias and provides
-    // `fit` (gradient-descent training) and `predict` (single-sample).
+    // Split into 80% train, 20% test — mirrors train_test_split(random_state=42)
+    std::vector<std::vector<double>> X_train, X_test;
+    std::vector<double>              y_train, y_test;
+    train_test_split(inputs, outputs, 0.20, X_train, y_train, X_test, y_test);
+
+    std::cout << "Training samples: " << X_train.size() << "\n";
+    std::cout << "Test samples    : " << X_test.size()  << "\n\n";
+
+    // Create and train the LinearRegression model.
+    // Mirrors: model = LinearRegression()
+    //          model.fit(X_train, y_train)
     sklearn_cpp::linear_model::LinearRegression model;
-
-    // Train the model. Parameters:
-    //  - inputs: matrix of shape (m, n)
-    //  - outputs: vector of length m
-    //  - learning_rate: step size for gradient descent
-    //  - iterations: number of training steps
-    // These hyperparameters are small/simple here to keep training stable.
-    model.fit(inputs, outputs, 1e-7, 1000);
+    model.fit(X_train, y_train, 1e-7, 1000);
 
     // Print a small demonstration of predictions vs actual targets for the
-    // first few samples. This shows the model was trained and can produce
-    // numeric outputs; it is not a thorough evaluation.
-    std::cout << "\nPrediction vs Actual:\n";
+    // first few samples from the test set.
+    std::cout << "Prediction vs Actual (first 5 from test set):\n";
     std::cout << "-----------------------------\n";
 
-    for (int i = 0; i < 5 && i < (int)inputs.size(); i++) {
-        double pred = model.predict(inputs[i]);
+    for (int i { 0 }; i < 5 && i < static_cast<int>(X_test.size()); ++i) {
+        double pred = model.predict(X_test[i]);
         std::cout << "Sample " << i
                   << " | Predicted: " << pred
-                  << " | Actual: " << outputs[i]
+                  << " | Actual: " << y_test[i]
                   << "\n";
     }
 
-    // Successful run
-    return 0;
+    // R² score — mirrors sklearn's model.score(X_test, y_test)
+    std::cout << "\nR² score (training) : " << model.score(X_train, y_train) << "\n";
+    std::cout << "R² score (test)     : " << model.score(X_test,  y_test)  << "\n";
+
+    return 0; // successful run
 }
