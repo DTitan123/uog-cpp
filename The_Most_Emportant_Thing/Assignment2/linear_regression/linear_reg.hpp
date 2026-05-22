@@ -1,6 +1,7 @@
 // linear_reg.hpp
 // Simple LinearRegression class for ENG3091 Assignment 02.
 //
+// co-pilot helped me write this code <3 thx co-pilot
 // Purpose:
 //  - Implements a LinearRegression class that trains via batch gradient
 //    descent and predicts via a dot product of weights and features.
