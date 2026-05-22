@@ -1,7 +1,3 @@
-// No report is required for this assignment. The goal is to comment the
-// implementation clearly and concisely so a reader understands how the
-// CSV is read and how the linear regression is used.
-//
 // This `main.cpp` does three things:
 //  1. Open and read a CSV file (relative path: ../data/concrete.csv).
 //  2. Parse each line into numeric features and a target value.

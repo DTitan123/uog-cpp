@@ -178,12 +178,12 @@ int main() {
     //      iterations    = 1000  (enough for good convergence)
     //
     //    This mirrors:
-    //      log_reg = LogisticRegression()
-    //      log_reg.fit(X_train, y_train)
+    //      logistic_regression = LogisticRegression()
+    //      logistic_regression.fit(X_train, y_train)
 
     std::cout << "--- Training ---\n";
-    sklearn_cpp::linear_model::LogisticRegression log_reg;
-    log_reg.fit(X_train, y_train, 1e-4, 1000);
+    sklearn_cpp::linear_model::LogisticRegression logistic_regression;
+    logistic_regression.fit(X_train, y_train, 1e-4, 1000);
 
 
 
@@ -192,8 +192,8 @@ int main() {
     //    accuracy_score(y_test, y_pred) in sklearn is reproduced
     //    by model.score(), which counts correct predictions / m.
 
-    double train_accuracy = log_reg.score(X_train, y_train);
-    double test_accuracy  = log_reg.score(X_test,  y_test);
+    double train_accuracy = logistic_regression.score(X_train, y_train);
+    double test_accuracy  = logistic_regression.score(X_test,  y_test);
 
     std::cout << "\n--- Accuracy ---\n";
     std::cout << "Training set accuracy : " << train_accuracy << "\n";
@@ -204,7 +204,7 @@ int main() {
     // 5. Visualise predictions on 6 test samples.
     //    Mirrors the 2x3 subplot demo in the assignment:
     //      for i in range(nrows * ncols):
-    //          predicted_label = int(log_reg.predict(data_point))
+    //          predicted_label = int(logistic_regression.predict(data_point))
     //          plt.title(f"Actual: {actual} | Pred: {predicted}")
   
     std::cout << "\n--- Sample Predictions (first 6 from test set) ---\n";
@@ -212,8 +212,8 @@ int main() {
     std::cout << "-------|-----------|-----------|-------\n";
 
     for (int i = 0; i < 6 && i < static_cast<int>(X_test.size()); ++i) {
-        double prob      = log_reg.predict_proba(X_test[i]);
-        int    predicted = log_reg.predict(X_test[i]);
+        double prob      = logistic_regression.predict_proba(X_test[i]);
+        int    predicted = logistic_regression.predict(X_test[i]);
         int    actual    = static_cast<int>(y_test[i]);
 
         std::cout << "  " << i << "    | "
