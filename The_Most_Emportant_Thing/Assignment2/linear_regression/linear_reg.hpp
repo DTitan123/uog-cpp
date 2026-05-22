@@ -1,44 +1,51 @@
-#pragma once
-
-#include <vector>
-#include <iostream>
-
 // linear_reg.hpp
-// Simple LinearRegression class used for teaching.
+// Simple LinearRegression class for ENG3091 Assignment 02.
 //
-// Purpose and usage (clear and concise):
-//  - This header declares a compact LinearRegression class that supports
-//    training via a basic batch gradient-descent `fit` and prediction via
-//    `predict`.
-//  - Intended for educational use: easy to read and understand, not
-//    optimized for production. No external dependencies beyond the STL.
+// Purpose:
+//  - Implements a LinearRegression class that trains via batch gradient
+//    descent and predicts via a dot product of weights and features.
+//  - No external dependencies beyond the STL.
 //
-// Data layout expected by `fit`:
+// Data layout expected by fit():
 //  - X: vector of samples (m), each sample is a vector of features (n).
 //  - y: vector of target values of length m.
 //
-// Training algorithm (implementation notes):
-//  - We initialize weights to zero and perform `iterations` steps of
-//    batch gradient descent with the provided `learning_rate`.
+// Training algorithm:
+//  - Weights are initialised to zero and updated over `iterations` steps
+//    of batch gradient descent with the provided `learning_rate`.
 //  - Gradients are computed as the sum of errors over all samples (MSE
-//    derivative). The implementation uses a simple scaling factor (2/m)
-//    when updating weights and bias.
-//  - No feature scaling, regularization, or convergence checks are
-//    implemented to keep the code minimal and explicit.
+//    derivative), scaled by 2/m.
+//  - No feature scaling or regularisation is applied.
 //
 // Complexity:
 //  - Each iteration does O(m * n) work (m samples, n features).
-//
-// Notes for readers and graders:
-//  - The class is intentionally small and self-contained. The header
-//    includes inline method implementations to keep the project simple for
-//    students; in larger projects you may split declarations and
-//    implementations across `.hpp` and `.cpp` files.
+#pragma once
+
+#include <vector>
 
 namespace sklearn_cpp {
 namespace linear_model {
 
-class LinearRegression {
+// BaseModel
+//
+// Abstract base class shared by LinearRegression and LogisticRegression.
+// Both models expose the same fit() and predict() interface, so we define
+// it once here and inherit in each subclass.
+class BaseModel {
+public:
+    // fit() and predict_value() are pure virtual: every subclass must implement them.
+    virtual void fit(const std::vector<std::vector<double>>& X,
+                     const std::vector<double>& y,
+                     double learning_rate,
+                     int iterations) = 0;
+
+    virtual double predict_value(const std::vector<double>& x) const = 0;
+
+    // Virtual destructor: required whenever a class has virtual functions.
+    virtual ~BaseModel() = default;
+};
+
+class LinearRegression : public BaseModel {
 
 private:
     // Model parameters
@@ -46,57 +53,55 @@ private:
     double bias;                 // scalar intercept term
 
 public:
-    // Constructor: set a sensible default for bias. `weights` will be
-    // initialized in `fit` when the training data size (n) is known.
-    LinearRegression() : bias(0.0) {}
+    // Constructor: initialises bias to zero. weights are initialised
+    // in fit() once the number of features is known.
+    LinearRegression() : bias { 0.0 } {}
 
-    // Fit the linear model using batch gradient descent.
+    // fit() — trains the model using batch gradient descent.
     // Parameters:
-    //  - X: matrix shape (m, n) where m = number of samples, n = features
+    //  - X: matrix of shape (m, n), m samples and n features
     //  - y: vector of length m containing target values
-    //  - learning_rate: gradient descent step size (default small value)
+    //  - learning_rate: step size for gradient descent
     //  - iterations: number of gradient steps to perform
-    // Implementation details:
-    //  - Initializes `weights` to zeros and executes `iterations` loops.
-    //  - Computes gradient of mean-squared error and updates weights/bias.
-    //  - No normalization or regularization is applied; this keeps the
-    //    code simple and explicit for learning purposes.
+    // Initialises weights to zero and updates them each iteration
+    // using the MSE gradient scaled by 2/m. No normalisation or
+    // regularisation is applied.
     void fit(const std::vector<std::vector<double>>& X,
              const std::vector<double>& y,
              double learning_rate = 1e-7,
-             int iterations = 1000)
+             int iterations = 1000) override
     {
-        // Number of samples (m) and number of features (n)
-        int m = X.size();
-        int n = X[0].size();
+        // number of samples (m) and number of features (n)
+        const int m { static_cast<int>(X.size()) };
+        const int n { static_cast<int>(X[0].size()) };
 
-        // Initialize parameters
+        // initialise parameters
         weights.assign(n, 0.0);
         bias = 0.0;
 
-        // Gradient descent main loop
+        // gradient descent main loop
         for (int iter = 0; iter < iterations; iter++) {
 
-            // Accumulate gradients across all samples
+            // accumulate gradients across all samples
             std::vector<double> dw(n, 0.0);
             double db = 0.0;
 
             for (int i = 0; i < m; i++) {
-                // Compute prediction and error for sample i
+                // compute prediction and error for sample i
                 double y_pred = predict(X[i]);
                 double error = y_pred - y[i];
 
-                // Accumulate feature-wise gradients
+                // accumulate feature-wise gradients
                 for (int j = 0; j < n; j++)
                     dw[j] += error * X[i][j];
 
-                // Accumulate bias gradient
+                // accumulate bias gradient
                 db += error;
             }
 
-            // Update parameters using the average gradient scaled by 2/m
-            // (derivative of MSE). We subtract because we move opposite the
-            // gradient to minimize the loss.
+            // update parameters using the average gradient scaled by 2/m
+            // (derivative of MSE). subtract because we move opposite the
+            // gradient to minimise the loss.
             for (int j = 0; j < n; j++)
                 weights[j] -= learning_rate * (2.0 / m) * dw[j];
 
@@ -104,16 +109,45 @@ public:
         }
     }
 
-    // Predict a scalar value for a single feature vector `x`.
-    // The prediction formula is: bias + dot(weights, x)
+    // predict() — returns a scalar prediction for a single feature vector.
+    // Formula: bias + dot(weights, x)
     double predict(const std::vector<double>& x) const {
-
         double result = bias;
-
         for (size_t j = 0; j < weights.size(); j++)
             result += weights[j] * x[j];
-
         return result;
+    }
+
+    // predict_value() satisfies the BaseModel interface.
+    // Delegates to predict() so existing code is unchanged.
+    double predict_value(const std::vector<double>& x) const override {
+        return predict(x);
+    }
+
+    // score() — returns R² (coefficient of determination).
+    // R² = 1 - SS_res / SS_tot
+    // 1.0 = perfect fit, 0.0 = no better than predicting the mean.
+    // Mirrors sklearn's LinearRegression.score(X, y).
+    double score(const std::vector<std::vector<double>>& X,
+                 const std::vector<double>& y) const
+    {
+        const int m { static_cast<int>(X.size()) };
+
+        double y_mean { 0.0 };
+        for (int i { 0 }; i < m; ++i)
+            y_mean += y[i];
+        y_mean /= m;
+
+        double ss_res { 0.0 };
+        double ss_tot { 0.0 };
+        for (int i { 0 }; i < m; ++i) {
+            double error { predict(X[i]) - y[i] };
+            ss_res += error * error;
+            ss_tot += (y[i] - y_mean) * (y[i] - y_mean);
+        }
+
+        if (ss_tot == 0.0) return 1.0;
+        return 1.0 - (ss_res / ss_tot);
     }
 };
 
