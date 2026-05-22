@@ -47,7 +47,7 @@ explicit LogisticRegression(double lambda_reg = 0.01)
 
 // fit() receives the X matrix and the Y labels and sets the learning rate 
 // and the number of iterations. this thus finds the best weight and bias
-void fit(const std::vector<std::vector<double>>& X, const std::vector<double>& y, double learning_rate = 1e-4, int iterations = 1000) 
+void fit(const std::vector<std::vector<double>>& X, const std::vector<double>& y, double learning_rate = 1e-4, int iterations = 1000) override
 {
     // initialise variables
     const int m { static_cast<int>(X.size()) };      // number of samples
@@ -105,6 +105,12 @@ int predict(const std::vector<double>& x) const{
         probability = 0;
     }
     return probability;   
+}
+
+// predict_value() satisfies the BaseModel interface.
+// Delegates to predict_proba() to bridge the difference between the two coding styles.
+double predict_value(const std::vector<double>& x) const override {
+    return predict_proba(x);
 }
 
 // takes x and y as inputs to then return the accuracy of the model as float
