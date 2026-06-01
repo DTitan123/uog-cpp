@@ -9,4 +9,4 @@
 | Harry Powell Evans | 2788408P |
 
 ## AI Assistance
-Please note that Gemini guided learning mode and Claude was used to support with the coding. The code is our own however when stuck or in need of help with certain things we couldn't implement we relied on generative AI.
+We used Gemini guided learning mode and Claude to support our learning during this assignment. Where we encountered problems we could not resolve independently, we used these tools to help understand the issue and find a way forward. The final code and design decisions are our own.
